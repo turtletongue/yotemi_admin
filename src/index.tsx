@@ -1,18 +1,35 @@
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-import { Provider } from 'react-redux';
-import { store } from './app/store';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import './index.css';
+import React from "react";
+import { createRoot } from "react-dom/client";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import { ChakraProvider } from "@chakra-ui/react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-const container = document.getElementById('root')!;
+import SignIn from "@pages/sign-in";
+import { persistor, store } from "@store/index";
+import reportWebVitals from "./reportWebVitals";
+import App from "./App";
+
+import "./index.css";
+import SignOut from "@pages/sign-out/sign-out.component";
+
+const container = document.getElementById("root")!;
 const root = createRoot(container);
 
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <PersistGate loading={null} persistor={persistor}>
+        <ChakraProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/sign-in" element={<SignIn />} />
+              <Route path="/sign-out" element={<SignOut />} />
+              <Route path="/*" element={<App />} />
+            </Routes>
+          </BrowserRouter>
+        </ChakraProvider>
+      </PersistGate>
     </Provider>
   </React.StrictMode>
 );

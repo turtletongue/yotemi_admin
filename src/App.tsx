@@ -1,58 +1,50 @@
-import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
-import './App.css';
+import { Suspense, useEffect } from "react";
+import { Box, Flex } from "@chakra-ui/react";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 
-function App() {
+import Users from "@pages/users";
+import Reviews from "@pages/reviews";
+import Topics from "@pages/topics";
+import NotFound from "@pages/not-found";
+import { ErrorBoundary, Navbar } from "@components";
+import { useAppSelector } from "@store/hooks";
+import { selectIsAuthenticated } from "@store/features/auth";
+import navigationLinks from "@app/navigation-links";
+
+const App = () => {
+  const navigate = useNavigate();
+
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate("/sign-in");
+    }
+  }, [navigate, isAuthenticated]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
-    </div>
+    <Flex width="full" height="full">
+      <Navbar links={navigationLinks} />
+      <Box
+        width="full"
+        height="full"
+        paddingLeft="3.5rem"
+        paddingBottom="0.5rem"
+      >
+        <ErrorBoundary>
+          <Suspense>
+            <Routes>
+              <Route index element={<Navigate to="users" />} />
+              <Route path="users" element={<Users />} />
+              <Route path="reviews" element={<Reviews />} />
+              <Route path="topics" element={<Topics />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
+        </ErrorBoundary>
+      </Box>
+    </Flex>
   );
-}
+};
 
 export default App;
