@@ -22,7 +22,7 @@ const authApi = createApi({
     }),
     logout: builder.mutation<void, void>({
       query: () => ({
-        url: "authentication/revoke",
+        url: "authentication/admin/revoke",
         method: "POST",
         credentials: "include",
       }),

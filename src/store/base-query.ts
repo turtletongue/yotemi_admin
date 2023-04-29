@@ -41,7 +41,7 @@ export const baseQueryWithRefresh: BaseQueryFn<
       try {
         const refreshResult = await baseQuery(
           {
-            url: "/authentication/refresh",
+            url: "/authentication/admin/refresh",
             method: "POST",
             credentials: "include",
           },
